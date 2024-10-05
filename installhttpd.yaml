@@ -1,0 +1,21 @@
+---
+- name: Install and configure Apache HTTP server
+  hosts: all  # Specify your target hosts group
+  become: true  # Use sudo to install packages
+
+  tasks:
+    - name: Install httpd
+      yum:  # Use yum for Red Hat/CentOS or dnf for newer versions
+        name: httpd
+        state: present
+
+    - name: Ensure httpd is started and enabled
+      service:
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: Copy custom index.html to the web root
+      copy:
+        src: index.html  # Path to your local index.html file
+        dest: /var/www/html/index.html  # Destination on the target server
