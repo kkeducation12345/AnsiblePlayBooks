@@ -1,0 +1,32 @@
+---
+- name: Install and start Nginx
+  hosts: webservers
+  become: true  # Run tasks with elevated privileges (sudo)
+  
+  vars:
+    nginx_port: 80
+  
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+      notify: Start Nginx
+
+    - name: Configure Nginx
+      template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/sites-available/default
+      notify: Reload Nginx
+
+  handlers:
+    - name: Start Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: true
+
+    - name: Reload Nginx
+      service:
+        name: nginx
+        state: reloaded
