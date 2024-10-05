@@ -1,0 +1,23 @@
+---
+- name: Install and configure Apache HTTP server
+  hosts: all  # Specify your target hosts group
+  become: true  # Use sudo to install packages
+  vars:
+    location: "nellore"       # Change this to your server name
+    date: "21-10-2024"  # Change this to your desired document root
+  tasks:
+    - name: Install httpd
+      yum:  # Use yum for Red Hat/CentOS or dnf for newer versions
+        name: httpd
+        state: present
+
+    - name: Ensure httpd is started and enabled
+      service:
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: Copy custom index.html to the web root
+      template:
+        src: index.html  # Path to your local index.html file
+        dest: /var/www/html/index.html  # Destination on the target server
